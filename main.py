@@ -1,5 +1,5 @@
 
-
+### day 1 ###
 s = """
 R29
 R6
@@ -4797,6 +4797,7 @@ def solve_dial_method_click(instructions):
 
 print(solve_dial_method_click(items))
 
+### Day - 2 ###
 
 # INPUT
 ranges = [
@@ -4825,7 +4826,50 @@ for r in ranges:
 print("sum:", sum(invalid_ids))
 
 
+parsed_ranges = [(int(a), int(b)) for a, b in (r.split("-") for r in ranges.split(","))]
 
+
+LOW = min(a for a, b in parsed_ranges)
+HIGH = max(b for a, b in parsed_ranges)
+
+
+def inside_ranges(n):
+    for a, b in parsed_ranges:
+        if a <= n <= b:
+            return True
+    return False
+
+
+invalid_ids = set()
+
+max_len = len(str(HIGH))
+
+for block_len in range(1, max_len // 2 + 1):
+    start = 10 ** (block_len - 1)
+    end = 10 ** block_len
+
+    for base in range(start, end):
+        s = str(base)
+
+        repeat = 2
+        while True:
+            num = int(s * repeat)
+
+            if num > HIGH:
+                break
+
+            if num >= LOW and inside_ranges(num):
+                invalid_ids.add(num)
+
+            repeat += 1
+
+
+result = sum(invalid_ids)
+
+print("part 2 ans", result)
+
+
+### Day - 3 ###
 data = """4426546555433545424424345444644242452452532444564422646557424354153538454225332755435544545533324152
 4325282447422434333445212333343451413231333423353426332541123254243232342322553322244341312543932333
 4332333442334543644333542384256325234452445449454359452442434444344242333247233254353342732444654333
@@ -5073,52 +5117,8 @@ print("Total:", total)
 
 
 
+### Day- 4 ###
 
-ranges = "19391-47353,9354357-9434558,4646427538-4646497433,273-830,612658-674925,6639011-6699773,4426384-4463095,527495356-527575097,22323258-22422396,412175-431622,492524-611114,77-122,992964846-993029776,165081-338962,925961-994113,7967153617-7967231799,71518058-71542434,64164836-64292066,4495586-4655083,2-17,432139-454960,4645-14066,6073872-6232058,9999984021-10000017929,704216-909374,48425929-48543963,52767-94156,26-76,1252-3919,123-228"
-
-# Parse ranges
-parsed_ranges = [(int(a), int(b)) for a, b in (r.split("-") for r in ranges.split(","))]
-
-# Find global bounds
-LOW = min(a for a, b in parsed_ranges)
-HIGH = max(b for a, b in parsed_ranges)
-
-
-def inside_ranges(n):
-    for a, b in parsed_ranges:
-        if a <= n <= b:
-            return True
-    return False
-
-
-# Generate repeating-pattern numbers only
-invalid_ids = set()
-
-max_len = len(str(HIGH))
-
-for block_len in range(1, max_len // 2 + 1):
-    start = 10 ** (block_len - 1)
-    end = 10 ** block_len
-
-    for base in range(start, end):
-        s = str(base)
-
-        repeat = 2
-        while True:
-            num = int(s * repeat)
-
-            if num > HIGH:
-                break
-
-            if num >= LOW and inside_ranges(num):
-                invalid_ids.add(num)
-
-            repeat += 1
-
-
-result = sum(invalid_ids)
-
-print("part 2 ans", result)
 
 grid_str = """
 .@@@@@...@.@@@@@@@@@@.@@@@@@@.@.@.@@@@@@@@@@@@@..@.@@@.@@@@@@..@.@..@.@@...@.@@@@..@@@@....@@@.@@@..@.@.@.@@.@.@@@.@@@.@@@@@.@.@......@...@@
@@ -5327,7 +5327,6 @@ def total_removed_rolls(grid_str):
                 if neighbor_count < 4:
                     removable.append((r, c))
 
-        # Step 2: stop when none left
         if not removable:
             break
 
